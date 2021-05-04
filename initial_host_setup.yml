@@ -1,0 +1,33 @@
+- hosts: all
+  become: yes
+  tasks:
+
+    # - name: Create users
+    #   user: dakota
+    #   groups: admin
+
+
+    - name: Deploy SSH key
+      authorized_key:
+        user: lablab
+        state: present
+        key: "{{ lookup('file', '/home/lablab/.ssh/id_rsa.pub') }}"
+
+    - name: Update sudoers for NOPASSWORD
+      lineinfile:
+        path: /etc/sudoers
+        regexp: ^%adm\s+
+        line: "%adm ALL=(ALL) NOPASSWD: ALL"
+
+    - name: Create the admin group
+      group:
+        name: admin
+        state: present
+
+    - name: Add lablab user to admin group
+      user:
+        name: lablab
+        groups: admin
+        append: yes
+
+  
