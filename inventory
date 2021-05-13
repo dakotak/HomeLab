@@ -4,3 +4,24 @@
 
 [dhcp_dns]
 192.168.1.10
+
+[k8Master]
+k8s01cp
+
+[k8Worker]
+k8s01w01
+k8s01w02
+k8s01w03
+
+[awx]
+awx
+
+[docker]
+docker1
+
+[testhosts]
+test1
+test2
+test3
+test4
+test5
