@@ -1,0 +1,191 @@
+---
+
+- name: Install depndent packages
+  package:
+    state: present
+    name:
+      - unzip
+      - git
+      - subversion
+      - build-essential
+      - autoconf
+      - automake
+      - libtool
+      - libncurses5
+      - libncurses5-dev
+      - make
+      - libjpeg-dev
+      - libtool
+      - libtool-bin
+      - libsqlite3-dev
+      - libpcre3-dev
+      - libspeexdsp-dev
+      - libldns-dev
+      - libedit-dev
+      - yasm
+      - liblua5.2-dev
+      - libopus-dev
+      - cmake
+
+
+- name: Install optional packages
+  package:
+    state: present
+    name:
+      - libcurl4-openssl-dev
+      - libexpat1-dev
+      - libgnutls28-dev
+      - libtiff5-dev
+      - libx11-dev
+      - unixodbc-dev
+      - libssl-dev
+      - python-dev
+      - zlib1g-dev
+      - libasound2-dev
+      - libogg-dev
+      - libvorbis-dev
+      - libperl-dev
+      - libgdbm-dev
+      - libdb-dev
+      - uuid-dev
+      - libsndfile1-dev
+      - libavformat-dev # Default install fails without
+      - libswscale-dev
+      - libpq-dev # Required to build mod_pgsql
+
+
+- name: Install libks
+  tags: stateless
+  block:
+    - name: Clone project
+      git:
+        repo: https://github.com/signalwire/libks.git
+        dest: /usr/src/libks
+
+    - name: Run cmake
+      shell: cd /usr/src/libks && cmake .
+
+    - name: Run make
+      make:
+        chdir: /usr/src/libks
+
+    - name: Install
+      make:
+        chdir: /usr/src/libks
+        target: install
+
+
+- name: Install Signalwire-c
+  tags: stateless
+  block:
+    - name: Clone project
+      git:
+        repo: https://github.com/signalwire/signalwire-c.git
+        dest: /usr/src/signalwire-c
+
+    - name: Run cmake
+      shell: cd /usr/src/signalwire-c && cmake .
+
+    - name: Run make
+      make:
+        chdir: /usr/src/signalwire-c
+
+    - name: Install
+      make:
+        chdir: /usr/src/signalwire-c
+        target: install
+
+
+- name: Freeswitch Install
+  block:
+    - name: Download and extract
+      tags: download_extract
+      block:
+        - name: Download Freeswitch
+          get_url:
+            url: https://files.freeswitch.org/freeswitch-releases/freeswitch-1.10.3.-release.zip
+            dest: /usr/src
+
+        - name: Extract Freeswitch ZIP
+          unarchive:
+            remote_src: yes
+            src: /usr/src/freeswitch-1.10.3.-release.zip
+            dest: /usr/src/
+
+    - name: Run Freeswitch install scripts
+      block:
+        - name: Run Freeswitch configure script
+          shell: cd /usr/src/freeswitch-1.10.3.-release && ./configure -C
+
+        - name: Run Freeswitch makefile
+          make:
+            chdir: /usr/src/freeswitch-1.10.3.-release
+
+        - name: Run Freeswich make isntall
+          make:
+            chdir: /usr/src/freeswitch-1.10.3.-release
+            target: install
+      tags: stateless
+    # rescue:
+    #   - name: Reset install state after error
+    #     shell: cd /usr/src/freeswitch-1.10.3.-release && make clean 
+
+    - name: Compile sounds
+      shell: cd /usr/src/freeswitch-1.10.3.-release && make all cd-sounds-install cd-moh-install
+      # make:
+      #   chdir: make all cd-sounds-install cd-moh-install
+      tags: stateless
+
+    - name: Create symlinks
+      file:
+        src: /usr/local/freeswitch/bin/{{ item }}
+        dest: /usr/bin/{{ item }}
+        state: link
+      loop:
+        - freeswitch
+        - fs_cli
+  tags: freeswitch_install
+
+- name: Create freeswitch group
+  group:
+    name: freeswitch
+    state: present
+
+- name: Create freeswitch user
+  user:
+    name: freeswitch
+    system: yes
+    home: /usr/local/freeswitch
+    password: "*"
+    comment: FreeSWITCH Voice Platform
+    group: freeswitch
+    state: present
+
+- name: Set Freeswitch file ownership 
+  file:
+   recurse: yes
+   state: directory
+   owner: freeswitch
+   group: freeswitch
+   path: /usr/local/freeswitch
+   mode: ug=rwX,o=
+
+- name: Set Freeswitch bin permissions
+  file:
+    recurse: yes
+    state: directory
+    path: /usr/local/freeswitch/bin
+    mode: u=rwx,g=rx
+
+
+- name: Copy Freeswitch service file
+  copy:
+    src: freeswitch.service
+    dest: /etc/systemd/system/freeswitch.service
+    mode: ugo+x
+
+- name: Start Freeswitch service
+  service:
+    name: freeswitch.service
+    state: started
+    enabled: yes
