@@ -1,0 +1,17 @@
+- hosts: dhcp_dns
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - name: Load cisco sip phone data
+      include_vars:
+        file: phones.yml
+
+    
+    - name: Generate phone configs
+      template:
+        src: cisco_sip_phone.xml.j2
+        dest: /opt/tftp/SEP{{ phone.mac | upper }}.cnf.xml
+      loop: "{{ cisco_phones }}"
+      loop_control:
+        loop_var: phone

@@ -1,0 +1,23 @@
+- hosts: freeswitch
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - name: Deploy user configs
+      template:
+        src: sip_user.xml.j2
+        dest: /usr/local/freeswitch/conf/directory/default/{{ item }}.xml
+      loop:
+        - 1021
+        - 1022
+        - 1011
+        - 1012
+        - 1001
+        - 1002
+        - 1111
+        - 1100 # Softphone on my iPhone
+
+    - name: Reload freeswitch
+      service:
+        name: freeswitch
+        state: restarted
