@@ -26,6 +26,12 @@ dhcp-option=option:router,192.168.1.1
 dhcp-option=option:dns-server,192.168.1.10
 dhcp-option=option:netmask,255.255.255.0
 
+# Cisco Phone Settings
+dhcp-option=150,0.0.0.0
+dhcp-option=66,0.0.0.0
+enable-tftp
+tftp-root=/opt/tftp
+
 # DHCP Static Reservations
 dhcp-host=mgmt,192.168.1.111 # Management server
 dhcp-host=docker1,192.168.1.24  # docker1
@@ -35,6 +41,9 @@ dhcp-host=test3,192.168.1.53
 dhcp-host=test4,192.168.1.54
 dhcp-host=test5,192.168.1.55
 dhcp-host=awx,192.168.1.79
+dhcp-host={{ mac_addresses.yealink_basestation }},192.168.1.80 # Yealink wireless basestation
+dhcp-host={{ mac_addresses.cisco_phone_one }},192.168.1.81
+dhcp-host={{ mac_addresses.cisco_phone_two }},192.168.1.82
 
 # DNS Names
 cname=portainer.lablab.us,docker1

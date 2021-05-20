@@ -5,7 +5,10 @@
 
     - name: Load cisco sip phone data
       include_vars:
-        file: phones.yml
+        file: "{{ item }}"
+      loop:
+        - private_vars.yml
+        - phones.yml
 
     
     - name: Generate phone configs

@@ -1,0 +1,27 @@
+cisco_phones:
+  - mac: "{{ mac_addresses.cisco_phone_one }}"
+    ctiid: 1
+    label: Phone One
+    lines:
+      - label: 1001
+        proxy: 192.168.1.51
+        username: 1001
+        password: 9001
+        displayname: P1L1
+
+
+  - ctiid: 2
+    mac: "{{ mac_addresses.cisco_phone_two }}"
+    label: Phone Two
+    lines:
+      - label: 1011
+        proxy: 192.168.1.51
+        username: 1011
+        password: 9001
+        displayname: 1011
+      
+      - label: 1012
+        proxy: 192.168.1.51
+        username: 1012
+        password: 9001
+        displayname: P2L1

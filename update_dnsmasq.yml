@@ -3,12 +3,18 @@
   gather_facts: no
   tasks:
     
+    - name: Inlcude private_vars
+      include_vars:
+        file: private_vars.yml
+    
+
     - name: Copy the Dnsmasq config
-      copy:
-        src: files/dnsmasq.conf
+      template:
+        src: dnsmasq.conf.j2
         dest: /etc/dnsmasq.conf
         validate: dnsmasq --test --conf-file=%s
       notify: restart dnsmasq
+
 
     - name: Update /etc/hosts
       blockinfile:
