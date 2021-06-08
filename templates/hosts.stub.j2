@@ -1,0 +1,6 @@
+
+{% for host in hosts_alias %}
+    {% for alias in host.alias %}
+{{ host.ip }}		{{ alias }}
+    {% endfor %}
+{% endfor %}

@@ -1,0 +1,14 @@
+hosts:
+  - { ip: 192.168.1.24,  hostname: docker1 }
+  - { ip: 192.168.1.51,  hostname: test1 }
+  - { ip: 192.168.1.52,  hostname: test2 }
+  - { ip: 192.168.1.53,  hostname: test3 }
+  - { ip: 192.168.1.54,  hostname: test4 }
+  - { ip: 192.168.1.55,  hostname: test5 }
+  - { ip: 192.168.1.79,  hostname: awx }
+  - { ip: 192.168.1.80,  hostname: "{{ mac_addresses.yealink_basestation }}" }
+  - { ip: 192.168.1.81,  hostname: "{{ mac_addresses.cisco_phone_one }}" }
+  - { ip: 192.168.1.82,  hostname: "{{ mac_addresses.cisco_phone_two }}" }
+  - { ip: 192.168.1.101, hostname: elk, alias: ["logs", "kibana", "elasticsearch"] }
+  - { ip: 192.168.1.111, hostname: mgmt }
+    

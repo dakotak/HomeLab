@@ -3,9 +3,12 @@
   gather_facts: no
   tasks:
     
-    - name: Inlcude private_vars
+    - name: Inlcude vars
       include_vars:
-        file: private_vars.yml
+        file: "{{ item }}"
+      loop:
+        - private_vars.yml
+        - dns_dhcp.yml
     
 
     - name: Copy the Dnsmasq config
@@ -19,8 +22,10 @@
     - name: Update /etc/hosts
       blockinfile:
         path: /etc/hosts
-        block: |
-          192.168.1.24  git
+        block: "{{ lookup('template', 'hosts.stub.j2') }}"
+      notify: restart dnsmasq
+      vars:
+        hosts_alias: "{{ hosts | selectattr('alias', 'defined') }}"
 
 
   handlers:
