@@ -1,0 +1,12 @@
+
+- name: Update filebeat config
+  copy:
+    src: filebeat_freeswitch.yml
+    dest: /etc/filebeat/inputs.d/freeswitch.yml
+  notify: restart filebeat
+
+
+# - include_role:
+#     name: elastic_beat
+#   vars:
+#     beat: packetbeat
