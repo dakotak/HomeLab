@@ -1,0 +1,14 @@
+---
+# tasks file for monitoring_base
+
+- name: Ensure beat is set
+  fail: msg=beat var must be set!
+  when: beat not defined
+
+
+- name: Ensure elastic repo is installed
+  include_tasks: install_elastic_repo.yml
+
+
+- name: Install {{ beat }}
+  include_tasks: install_beat.yml

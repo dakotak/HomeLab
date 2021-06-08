@@ -1,0 +1,12 @@
+
+# - name: Check if {{ beat }}  package is installed
+#   package_facts:
+#     manager: apt
+
+
+- name: Ensure {{ beat }} is installed
+  apt:
+    name: >-
+      {{ beat }}{% if beats_version is defined and beats_version|length>0 %}={{ beats_version }}{% endif %}
+    state: present
+  notify: restart beat service

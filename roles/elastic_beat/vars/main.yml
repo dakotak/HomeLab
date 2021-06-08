@@ -1,0 +1,4 @@
+---
+
+elastic_repo: https://artifacts.elastic.co/packages/{{ beats_major_version }}/apt
+elastic_repo_key: https://packages.elastic.co/GPG-KEY-elasticsearch

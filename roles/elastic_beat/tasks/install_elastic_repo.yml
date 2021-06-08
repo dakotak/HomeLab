@@ -1,0 +1,11 @@
+
+- name: Add Beats repository key
+  apt_key:
+    url: "{{ elastic_repo_key }}"
+    state: present
+
+
+- name: Add beats repository
+  apt_repository:
+    repo: "deb {{ repo_url }} stable main"
+    state: present
