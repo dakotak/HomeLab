@@ -1,4 +1,7 @@
 
+[proxmox]
+pve[1:2]
+
 [mgmt]
 192.168.1.238
 
@@ -13,7 +16,7 @@ k8s01w01
 k8s01w02
 k8s01w03
 
-[awx]
+[tower]
 awx
 
 [docker]
@@ -25,6 +28,9 @@ test2
 test3
 test4
 test5
+
+[cloud]
+test1
 
 [freeswitch:children]
 testhosts

@@ -1,0 +1,42 @@
+# This playbook sets up proxmox servers after they have been deployed
+
+# For vm creation via Ansible see https://vectops.com/2020/01/provision-proxmox-vms-with-ansible-quick-and-easy/
+
+- hosts: proxmox
+  gather_facts: no
+  become: no
+  tasks:
+
+    - name: Remove license warning
+      block:
+
+        - name: Replace function call
+          replace:
+            path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+            backup: yes
+            regexp: res === null \|\| res === undefined \|\| !res \|\| res\n\s*.data.status.toLowerCase\(\) !== 'active'
+            replace: "false"
+          notify: restart_proxmox_service
+
+
+    - name: Disable pve-enterprise repo
+      # apt_repository:
+      #   repo: deb https://enterprise.proxmox.com/debian/pve buster pve-enterprise
+      #   state: absent
+      replace:
+        path: /etc/apt/sources.list.d/pve-enterprise.list
+        regexp: ^\s*([^#].*enterprise\.proxmox\.com.*)$
+        replace: '# \1'
+
+    - name: Add the pve-no-subscription repository
+      apt_repository:
+        repo: deb http://download.proxmox.com/debian/pve buster pve-no-subscription
+        state: present
+        filename: pve-no-subscription
+
+
+  handlers:
+    - name: restart_proxmox_service
+      service:
+        name: pveproxy
+        state: restarted
