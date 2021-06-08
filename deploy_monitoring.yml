@@ -1,0 +1,35 @@
+- hosts: elasticsearch
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - include_tasks: subtasks/update_elastic_config.yml
+      vars:
+        elastic_service: elasticsearch
+
+
+- hosts: logstash
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - include_tasks: subtasks/update_elastic_config.yml
+      vars:
+        elastic_service: logstash
+
+
+- hosts: kibana
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - include_tasks: subtasks/update_elastic_config.yml
+      vars:
+        elastic_service: kibana
+
+
+# - hosts: monitored_hosts
+#   become: yes
+#   gather_facts: no
+#   tasks:
+

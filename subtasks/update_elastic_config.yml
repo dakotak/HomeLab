@@ -1,0 +1,11 @@
+- name: Update {{ elastic_service }} config
+  copy:
+    src: "{{ elastic_service }}.yml"
+    dest: /etc/{{ elastic_service }}/{{ elastic_service }}.yml
+  register: elastic_config
+
+- name: Restart {{ elastic_service }} service
+  service:
+    name: "{{ elastic_service }}"
+    state: restarted
+  when: elastic_config.changed

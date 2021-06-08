@@ -1,0 +1,19 @@
+- hosts: monitored_hosts
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: metricbeat, restart_service: yes }
+    - { role: filebeat, restart_service: yes }
+    - { role: packetbeat, restart_service: yes }
+  tasks:
+
+  #   - name: Enable metricbeat modules
+    - name: Freeswitch monitoring
+      block:
+        - include_role:
+            name: Freeswitch
+            tasks_from: monitoring
+      when: "'freeswitch' in group_names"
+  
+      
+      
