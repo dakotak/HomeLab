@@ -1,6 +1,9 @@
-
-{% for host in hosts_alias %}
-    {% for alias in host.alias %}
-{{ host.ip }}		{{ alias }}
+#jinja2:lstrip_blocks: True
+{% for host in hosts %}
+  {{- "%-15s %s" | format(host.ip, host.hostname) }}
+  {% if 'aliases' in host %}
+    {% for alias in host.aliases %}
+      {{- "%-15s %s" | format(host.ip, alias) }}
     {% endfor %}
+  {% endif %}
 {% endfor %}

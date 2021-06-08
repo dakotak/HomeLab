@@ -24,8 +24,6 @@
         path: /etc/hosts
         block: "{{ lookup('template', 'hosts.stub.j2') }}"
       notify: restart dnsmasq
-      vars:
-        hosts_alias: "{{ hosts | selectattr('alias', 'defined') }}"
 
 
   handlers:
