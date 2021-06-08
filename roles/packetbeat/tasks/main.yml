@@ -1,0 +1,21 @@
+---
+# tasks file for monitoring_base
+
+- name: Install packetbeat dependency libpcap0.8
+  package:
+    name: libpcap0.8
+    state: present
+  tags: install
+
+
+- name: Install Packetbeat
+  include_tasks: install_beat.yml
+  tags: install, install_beat
+
+
+- name: Deploy Packetbeat default config
+  copy:
+    src: packetbeat.yml
+    dest: /etc/packetbeat/packetbeat.yml
+  notify: restart packetbeat service
+  tags: config
