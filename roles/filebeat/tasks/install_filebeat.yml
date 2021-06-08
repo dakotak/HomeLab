@@ -1,0 +1,30 @@
+
+# - name: Check if {{ beat }}  package is installed
+#   package_facts:
+#     manager: apt
+
+- name: Add Beats repository key
+  apt_key:
+    url: "{{ elastic_repo_key }}"
+    state: present
+
+
+- name: Add beats repository
+  apt_repository:
+    repo: "deb {{ elastic_repo_url }} stable main"
+    state: present
+
+
+- name: Ensure Filebeat is installed
+  apt:
+    name: >-
+      filebeat{% if beats_version is defined and beats_version|length>0 %}={{ beats_version }}{% endif %}
+    state: present
+  notify: restart beat service
+
+
+- name: Enable the Filebeat service
+  service:
+    name: filebeat
+    enabled: yes
+  when: enable_service

@@ -1,0 +1,8 @@
+---
+# handlers file for monitoring_base
+
+- name: restart filebeat service
+  service:
+    name: filebeat
+    state: restarted
+  when: restart_service

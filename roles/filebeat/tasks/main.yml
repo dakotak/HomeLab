@@ -1,0 +1,19 @@
+---
+# tasks file for monitoring_base
+
+- name: Install Filebeat
+  include_tasks: install_filebeat.yml
+  tags: install, install_beat
+
+
+- name: Deploy Filebeat default config
+  copy:
+    src: filebeat.yml
+    dest: /etc/filebeat/filebeat.yml
+  notify: restart filebeat service
+  tags: config
+  
+- name: Ensure /etc/filebeat/inputs.d directory exists
+  file:
+    path: /etc/filebeat/inputs.d/
+    state: directory
