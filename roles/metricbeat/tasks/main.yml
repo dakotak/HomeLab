@@ -1,0 +1,13 @@
+---
+
+- name: Install Metricbeat 
+  include_tasks: install_metricbeat.yml
+  tags: install, install_beat
+
+
+- name: Deploy Metricbeat default config
+  copy:
+    src: metricbeat.yml
+    dest: /etc/metricbeat/metricbeat.yml
+  notify: restart metricbeat service
+  tags: config

@@ -1,0 +1,5 @@
+---
+# defaults file for monitoring_base
+beats_major_version: 7
+enable_service: yes
+restart_service: no

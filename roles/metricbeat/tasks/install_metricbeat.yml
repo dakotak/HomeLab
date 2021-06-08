@@ -1,0 +1,26 @@
+
+- name: Add Beats repository key
+  apt_key:
+    url: "{{ elastic_repo_key }}"
+    state: present
+
+
+- name: Add beats repository
+  apt_repository:
+    repo: "deb {{ elastic_repo_url }} stable main"
+    state: present
+
+
+- name: Ensure Metricbeat is installed
+  apt:
+    name: >-
+      metricbeat{% if beats_version is defined and beats_version|length>0 %}={{ beats_version }}{% endif %}
+    state: present
+  notify: restart metricbeat service
+
+
+- name: Enable the Metricbeat service
+  service:
+    name: metricbeat
+    enabled: yes
+  when: enable_service
