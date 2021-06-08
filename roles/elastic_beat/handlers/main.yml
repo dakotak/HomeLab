@@ -1,7 +1,0 @@
----
-# handlers file for monitoring_base
-
-- name: restart beat service
-  service:
-    name: "{{ beat }}"
-    state: restarted
