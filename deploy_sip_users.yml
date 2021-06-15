@@ -5,7 +5,7 @@
 
     - name: Deploy user configs
       template:
-        src: sip_user.xml.j2
+        src: sip_user.xml.jinja
         dest: /usr/local/freeswitch/conf/directory/default/{{ item }}.xml
       loop:
         - 1021

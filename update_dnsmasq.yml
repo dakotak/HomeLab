@@ -13,7 +13,7 @@
 
     - name: Copy the Dnsmasq config
       template:
-        src: dnsmasq.conf.j2
+        src: dnsmasq.conf.jinja
         dest: /etc/dnsmasq.conf
         validate: dnsmasq --test --conf-file=%s
       notify: restart dnsmasq
@@ -22,7 +22,7 @@
     - name: Update /etc/hosts
       blockinfile:
         path: /etc/hosts
-        block: "{{ lookup('template', 'hosts.stub.j2') }}"
+        block: "{{ lookup('template', 'hosts.stub.jinja') }}"
       notify: restart dnsmasq
 
 

@@ -13,7 +13,7 @@
     
     - name: Generate phone configs
       template:
-        src: cisco_sip_phone.xml.j2
+        src: cisco_sip_phone.xml.jinja
         dest: /opt/tftp/SEP{{ phone.mac | upper }}.cnf.xml
       loop: "{{ cisco_phones }}"
       loop_control:
