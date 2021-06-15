@@ -21,6 +21,6 @@
 
 - name: Enable the Packetbeat service
   service:
-    name: "{{ beat }}"
+    name: packetbeat 
     enabled: yes
   when: enable_service
