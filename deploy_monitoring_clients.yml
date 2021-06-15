@@ -2,16 +2,16 @@
   become: yes
   gather_facts: no
   roles:
-    - { role: metricbeat, restart_service: yes }
-    - { role: filebeat, restart_service: yes }
-    - { role: packetbeat, restart_service: yes }
+    - { role: elastic_metricbeat, restart_service: yes }
+    - { role: elastic_filebeat, restart_service: yes }
+    - { role: elastic_packetbeat, restart_service: yes }
   tasks:
 
   #   - name: Enable metricbeat modules
     - name: Freeswitch monitoring
       block:
         - include_role:
-            name: Freeswitch
+            name: freeswitch
             tasks_from: monitoring
       when: "'freeswitch' in group_names"
   
