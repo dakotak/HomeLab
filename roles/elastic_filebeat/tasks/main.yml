@@ -6,6 +6,13 @@
   tags: install, install_beat
 
 
+- name: Ensure /etc/filebeat/inputs.d directory exists
+  file:
+    path: /etc/filebeat/inputs.d/
+    state: directory
+  tags: install, install_beat
+
+
 - name: Deploy Filebeat default config
   copy:
     src: filebeat.yml
@@ -13,7 +20,3 @@
   notify: restart filebeat service
   tags: config
   
-- name: Ensure /etc/filebeat/inputs.d directory exists
-  file:
-    path: /etc/filebeat/inputs.d/
-    state: directory
