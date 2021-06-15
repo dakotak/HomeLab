@@ -4,6 +4,7 @@
   tasks:
 
     - include_tasks: subtasks/update_elastic_config.yml
+      tags: only_elasticsearch
       vars:
         elastic_service: elasticsearch
 
@@ -14,6 +15,7 @@
   tasks:
 
     - include_tasks: subtasks/update_elastic_config.yml
+      tags: only_logstash
       vars:
         elastic_service: logstash
 
@@ -24,6 +26,7 @@
   tasks:
 
     - include_tasks: subtasks/update_elastic_config.yml
+      tags: only_kibana
       vars:
         elastic_service: kibana
 
