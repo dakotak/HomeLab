@@ -1,33 +1,42 @@
 - hosts: all
   become: yes
-  # roles:
-  #   - role: elastic_beat
-  #     vars:
-  #       beat: metricbeat
+  gather_facts: no
   tasks:
 
-    - name: Deploy SSH key
-      authorized_key:
-        user: lablab
+  - name: Create the admin group
+    group:
+      name: admin
+      state: present
+
+
+  - name: Ensure lablab user exists
+    user:
+      name: lablab
+      groups: admin
+      append: yes
+
+
+  - name: Deploy SSH key
+    authorized_key:
+      user: lablab
+      state: present
+      key: "{{ lookup('file', '/home/lablab/.ssh/id_rsa.pub') }}"
+
+
+  - name: Update sudoers for NOPASSWORD
+    lineinfile:
+      path: /etc/sudoers
+      regexp: ^%adm\s+
+      line: "%adm ALL=(ALL) NOPASSWD: ALL"
+      
+
+
+- hosts: all:!physical
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - name: Install Qemu guest agent
+      package:
+        name: qemu-guest-agent
         state: present
-        key: "{{ lookup('file', '/home/lablab/.ssh/id_rsa.pub') }}"
-
-
-    - name: Update sudoers for NOPASSWORD
-      lineinfile:
-        path: /etc/sudoers
-        regexp: ^%adm\s+
-        line: "%adm ALL=(ALL) NOPASSWD: ALL"
-
-
-    - name: Create the admin group
-      group:
-        name: admin
-        state: present
-
-
-    - name: Add lablab user to admin group
-      user:
-        name: lablab
-        groups: admin
-        append: yes
