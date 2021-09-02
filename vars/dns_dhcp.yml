@@ -1,15 +1,37 @@
 hosts:
-  - { ip: 192.168.1.15, hostname: nas1 }
-  - { ip: 192.168.1.24,  hostname: docker1 }
+  - { ip: 192.168.1.9,   hostname: ns1 }
+  - { ip: 192.168.1.11,  hostname: pve1 }
+  - { ip: 192.168.1.12,  hostname: pve2 }
+  - { ip: 192.168.1.13,  hostname: pve3 }
+  - { ip: 192.168.1.15,  hostname: nas1 }
+  - { ip: 192.168.1.31,  hostname: mr19 }
   - { ip: 192.168.1.51,  hostname: test1 }
   - { ip: 192.168.1.52,  hostname: test2 }
   - { ip: 192.168.1.53,  hostname: test3 }
   - { ip: 192.168.1.54,  hostname: test4 }
   - { ip: 192.168.1.55,  hostname: test5 }
-  - { ip: 192.168.1.79,  hostname: awx }
+  - { ip: 192.168.1.63,  hostname: fs03 }
   - { ip: 192.168.1.80,  hostname: "{{ mac_addresses.yealink_basestation }}" }
   - { ip: 192.168.1.81,  hostname: "{{ mac_addresses.cisco_phone_one }}" }
   - { ip: 192.168.1.82,  hostname: "{{ mac_addresses.cisco_phone_two }}" }
+  - { ip: 192.168.1.98,  hostname: zabbix }
+  - { ip: 192.168.1.99,  hostname: gitlab }
   - { ip: 192.168.1.101, hostname: elk, aliases: ["logs", "kibana", "elasticsearch", "logstash"] }
   - { ip: 192.168.1.111, hostname: mgmt }
+  - { ip: 192.168.1.115, hostname: kube1-cp1 }
+  - { ip: 192.168.1.116, hostname: kube1-cp2 }
+  - { ip: 192.168.1.117, hostname: kube1-worker1 }
+  - { ip: 192.168.1.118, hostname: kube1-worker2 }
+  - { ip: 192.168.1.120, hostname: k8s1-master1, aliases: ["awx"] }
+  - { ip: 192.168.1.121, hostname: k8s1-worker1 }
+  - { ip: 192.168.1.122, hostname: k8s1-worker2 }
+  - { ip: 192.168.1.125, hostname: microk8s1-m1 }
+  - { ip: 192.168.1.126, hostname: microk8s1-w1 }
+  - { ip: 192.168.1.127, hostname: microk8s1-w2 }
+  - { ip: 192.168.1.130, hostname: k3s1-m1 }
+  - { ip: 192.168.1.131, hostname: k3s1-w1 }
+  - { ip: 192.168.1.132, hostname: k3s1-w2 }
+  - { ip: 192.168.1.140, hostname: sipstats }
+  # 150-160 reservered for metelLB
+
     
