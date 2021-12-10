@@ -1,12 +1,21 @@
 - hosts: elasticsearch
   become: yes
   gather_facts: no
+  roles:
+    - { name: elastic_metricbeat, restart_service: yes }
   tasks:
 
     - include_tasks: subtasks/update_elastic_config.yml
       tags: only_elasticsearch
       vars:
         elastic_service: elasticsearch
+
+    - name: Update metricbeat config
+      copy:
+        src: elastic_cluster_metrics.yml
+        dest: /etc/metricbeat/modules.d/elastic_cluster_metrics.yml
+        owner: root
+      notify: restart metricbeat service
 
 
 - hosts: logstash
@@ -29,10 +38,4 @@
       tags: only_kibana
       vars:
         elastic_service: kibana
-
-
-# - hosts: monitored_hosts
-#   become: yes
-#   gather_facts: no
-#   tasks:
 

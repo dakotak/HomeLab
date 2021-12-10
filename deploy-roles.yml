@@ -1,0 +1,8 @@
+- hosts: docker
+  become: yes
+  gather_facts: yes
+  vars:
+    docker_users:
+      - lablab
+  roles:
+    - docker

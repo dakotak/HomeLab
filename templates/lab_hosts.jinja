@@ -1,0 +1,3 @@
+{% for host in hosts %}
+{{- "%-15s %s" | format(host.ip, host.hostname) }}
+{% endfor %}

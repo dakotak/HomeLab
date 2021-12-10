@@ -1,0 +1,4 @@
+- hosts: all!zabbix
+  become: yes
+  roles:
+    - zabbix_agent

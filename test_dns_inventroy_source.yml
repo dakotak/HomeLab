@@ -1,0 +1,9 @@
+- hosts: dhcp_dns
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - debug: var=d
+      vars:
+        d: "{{ item }}"
+      loop: "{{ hostvars.keys() }}"

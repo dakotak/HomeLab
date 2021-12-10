@@ -1,0 +1,9 @@
+- hosts: all,!zabbix_monitoring
+  become: yes
+  roles:
+    - zabbix_agent
+
+- name: Deploy Linux Exporter
+  hosts: all
+  become: yes
+  

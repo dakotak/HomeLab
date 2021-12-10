@@ -4,27 +4,37 @@ domain-needed
 bogus-priv
 expand-hosts
 log-queries
+log-facility=/var/log/dnsmasq.log
 
-listen-address=::1,127.0.0.1,192.168.1.10
+
+auth-server=lablab.us
+auth-zone=lablab.us,10.0.0.0/22
+
+listen-address=::1,127.0.0.1,{{ ansible_host }}
 
 domain=lablab.us
 local=/lablab.us/
 
+addn-hosts=/etc/lab_hosts
+
+# Only use upstream servers defined in this file
+no-resolv
+server=8.8.8.8
 
 # Use googles DNS servers
-server=8.8.8.8
-server=8.8.4.4
+# server=8.8.8.8
+# server=8.8.4.4
 
 dhcp-authoritative
 
-# dhcp-range=192.168.1.5,192.168.1.200,static,255.255.255.0,infinite
-dhcp-range=192.168.1.201,192.168.1.250,12h
+# dhcp-range=10.0.0.1,10.0.3.200,static
+dhcp-range=10.0.3.201,10.0.3.250,12h
 dhcp-leasefile=/var/lib/dnsmasq/dnsmasq.lease
 
 # DHCP Options
-dhcp-option=option:router,192.168.1.1
-dhcp-option=option:dns-server,192.168.1.10
-dhcp-option=option:netmask,255.255.255.0
+dhcp-option=option:router,10.0.0.1
+dhcp-option=option:dns-server,10.0.1.3
+dhcp-option=option:netmask,255.255.252.0
 
 # Cisco Phone Settings
 dhcp-option=150,0.0.0.0
@@ -33,12 +43,16 @@ enable-tftp
 tftp-root=/opt/tftp
 
 
-{% for host in hosts %}
-dhcp-host={{ host.hostname }},{{ host.ip }}
+{# Use SIGHUP to release this dhcp hosts file #}
+dhcp-hostsfile={{ dhcp_hostsfile }}
+
+
+# DNS cnames
+{% for host in hosts if 'aliases' in host %}
+{# cname={{ host.aliases | join(',') }},{{ host.hostname }} #}
+cname=*.{{host.hostname}},*.{{host.hostname}}.lablab.us,{{ host.hostname }}
+{% for alias in host.aliases %}
+cname={{ alias }},{{ alias }}.lablab.us,{{ host.hostname }}
 {% endfor %}
 
-# DNS Names
-cname=portainer.lablab.us,docker1
-cname=git.lablab.us,docker1
-cname=git,docker1
-# cname=awx.lablab.us,docker1
+{% endfor %}

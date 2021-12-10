@@ -96,6 +96,10 @@
         target: install
 
 
+- set_fact:
+    src_dir: /usr/src/freeswitch-1.10.3.-release
+
+
 - name: Freeswitch Install
   block:
     - name: Download and extract
@@ -111,19 +115,22 @@
             remote_src: yes
             src: /usr/src/freeswitch-1.10.3.-release.zip
             dest: /usr/src/
+            
+    - name: Enable mod_flite
+      include_tasks: modules/install_mod_flite.yml
 
     - name: Run Freeswitch install scripts
       block:
         - name: Run Freeswitch configure script
-          shell: cd /usr/src/freeswitch-1.10.3.-release && ./configure -C
+          shell: cd {{ src_dir }} && ./configure -C
 
         - name: Run Freeswitch makefile
           make:
-            chdir: /usr/src/freeswitch-1.10.3.-release
+            chdir: "{{ src_dir }}"
 
         - name: Run Freeswich make isntall
           make:
-            chdir: /usr/src/freeswitch-1.10.3.-release
+            chdir: "{{ src_dir }}"
             target: install
       tags: stateless
     # rescue:
@@ -131,7 +138,7 @@
     #     shell: cd /usr/src/freeswitch-1.10.3.-release && make clean 
 
     - name: Compile sounds
-      shell: cd /usr/src/freeswitch-1.10.3.-release && make all cd-sounds-install cd-moh-install
+      shell: cd {{ src_dir }} && make all cd-sounds-install cd-moh-install
       # make:
       #   chdir: make all cd-sounds-install cd-moh-install
       tags: stateless

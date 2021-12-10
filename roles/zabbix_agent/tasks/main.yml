@@ -1,0 +1,28 @@
+---
+# tasks file for zabbix_agent
+
+# - name: Install Zabbix Agent on Ubuntu
+#   include_tasks: "{{ ansible_distribution }}_install.yml"
+- name: Install zabbix agent
+  package:
+      name: zabbix-agent
+      state: present
+
+
+- name: Deploy zabbix agent configuration
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf
+  notify: Restart Zabbix Agent
+
+- name: Deploy custom UserParamerter
+  template:
+    src: custom_userparams.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf.d/custom_userparams.conf
+  notify: Restart Zabbix Agent
+
+- name: Enable and start the Zabbix Agent service
+  service:
+    name: zabbix-agent
+    enabled: yes
+    state: restarted

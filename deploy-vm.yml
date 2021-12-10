@@ -1,0 +1,21 @@
+- hosts: pve1
+  become: no
+  gather_facts: no
+  tasks:
+  
+  - name: Clone the template
+    delegate_to: localhost
+    register: clone_info
+    proxmox_kvm:
+      api_host: pve1.lablab.us
+      api_user: root@pam
+      api_password: FCXO24nj
+      # api_password: 71168c4a-92c7-4fb7-bac8-144a23aef3bc
+      clone: ubuntu-2004-cloudinit-template
+      name: Test clone
+      node: pve1
+      storage: vm-store
+
+  - name: Display clone info
+    debug: var=clone_info
+

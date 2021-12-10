@@ -1,0 +1,11 @@
+
+- name: Install dependent packages
+  package:
+    name: flite1-dev
+    state: present
+
+- name: Uncomment mod_flite
+  replace:
+    path: "{{ (src_dir, 'modules.conf') | path_join }}"
+    regexp: ^#asr_tts/mod_flite$
+    replace: asr_tts/mod_flite

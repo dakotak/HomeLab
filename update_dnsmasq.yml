@@ -1,6 +1,8 @@
 - hosts: dad
   become: yes
   gather_facts: no
+  vars:
+    dhcp_hostsfile: /etc/dhcp_hosts.conf
   tasks:
     
     - name: Inlcude vars
@@ -19,11 +21,18 @@
       notify: restart dnsmasq
 
 
-    - name: Update /etc/hosts
-      blockinfile:
-        path: /etc/hosts
-        block: "{{ lookup('template', 'hosts.stub.jinja') }}"
-      notify: restart dnsmasq
+    - name: Deploy /etc/lab_hosts
+      template:
+        src: lab_hosts.jinja
+        dest: /etc/lab_hosts
+      notify: reload dnsmasq
+
+
+    - name: Update DHCP hosts file
+      template:
+        src: dnsmasq_dhcp_hosts.conf.jinja
+        dest: "{{ dhcp_hostsfile }}"
+      notify: reload dnsmasq
 
 
   handlers:
@@ -31,3 +40,6 @@
       service:
         name: dnsmasq
         state: restarted
+
+    - name: reload dnsmasq
+      shell: pkill -1 dnsmasq

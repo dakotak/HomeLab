@@ -1,2 +1,8 @@
 ---
 # defaults file for Freeswitch
+
+enable_modules:
+  - asr_tts/mod_flite
+
+disable_modules:
+  - asr_tts/mod_cepstral

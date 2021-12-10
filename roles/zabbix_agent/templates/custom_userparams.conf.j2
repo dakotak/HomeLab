@@ -1,0 +1,4 @@
+
+{% if 'proxmox' in group_names %}
+UserParameter=runningVMCount,qm list | awk '$3 == "running" {print $0}' | wc -l
+{% endif %}
