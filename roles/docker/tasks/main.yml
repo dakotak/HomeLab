@@ -1,0 +1,59 @@
+
+- name: Ensure previous Docker components are removed
+  package:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+
+
+- name: Ensure dependencies are installed
+  package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+    state: present
+
+
+- name: Add Docker apt key
+  apt_key:
+    url: "{{ docker_apt_gpg_key }}"
+    state: present
+  register: add_repository_key
+
+
+- name: Add the Docker repositories
+  apt_repository:
+    repo: "{{ docker_apt_repository }}"
+    state: present
+    update_cache: true
+
+
+- name: Install Docker
+  package:
+    name: docker-ce
+    state: present
+  notify: Restart Docker
+
+- name: Ensure Docker is started and enabled at boot
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+  
+- name: Ensure docker users are added to the docker group.
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users }}"
+  when: docker_users is defined
+
+
+- name: Install docker-compose
+  include_tasks: docker-compose.yml
